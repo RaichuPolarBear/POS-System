@@ -123,7 +123,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     // Plan management
     Route::resource('plans', Admin\PlanController::class);
     Route::post('/plans/{plan}/toggle-status', [Admin\PlanController::class, 'toggleStatus'])->name('plans.toggle-status');
-    
+
     // Plan features management
     Route::resource('plan-features', Admin\PlanFeatureController::class)->except(['show']);
     Route::post('/plan-features/seed-defaults', [Admin\PlanFeatureController::class, 'seedDefaults'])->name('plan-features.seed-defaults');

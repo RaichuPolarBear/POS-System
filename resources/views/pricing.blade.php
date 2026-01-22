@@ -15,71 +15,71 @@
     <!-- Pricing Cards -->
     <div class="row g-4 justify-content-center mb-5">
         @forelse($plans as $plan)
-            <div class="col-lg-4 col-md-6">
-                <div class="card h-100 {{ $plan->is_popular ? 'border-primary border-2 shadow-lg' : 'shadow-sm' }}">
-                    @if($plan->is_popular)
-                        <div class="card-header bg-primary text-white text-center py-2">
-                            <small class="fw-semibold text-uppercase">Most Popular</small>
-                        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 {{ $plan->is_popular ? 'border-primary border-2 shadow-lg' : 'shadow-sm' }}">
+                @if($plan->is_popular)
+                <div class="card-header bg-primary text-white text-center py-2">
+                    <small class="fw-semibold text-uppercase">Most Popular</small>
+                </div>
+                @endif
+                <div class="card-body p-4 text-center">
+                    <h3 class="fw-bold mb-2">{{ $plan->name }}</h3>
+                    @if($plan->description)
+                    <p class="text-muted small mb-3">{{ $plan->description }}</p>
                     @endif
-                    <div class="card-body p-4 text-center">
-                        <h3 class="fw-bold mb-2">{{ $plan->name }}</h3>
-                        @if($plan->description)
-                            <p class="text-muted small mb-3">{{ $plan->description }}</p>
-                        @endif
-                        
-                        <div class="my-4">
-                            <span class="display-4 fw-bold">₹{{ number_format($plan->price, 0) }}</span>
-                            <span class="text-muted">/{{ str_replace('ly', '', $plan->billing_cycle) }}</span>
-                        </div>
 
-                        @if($plan->trial_days > 0)
-                            <div class="alert alert-success py-2 mb-3">
-                                <small><i class="bi bi-gift me-1"></i> {{ $plan->trial_days }}-day free trial</small>
-                            </div>
-                        @endif
-
-                        <hr>
-
-                        <ul class="list-unstyled text-start mb-4">
-                            @foreach($plan->features ?? [] as $featureSlug)
-                                @php $feature = $features->flatten()->firstWhere('slug', $featureSlug); @endphp
-                                @if($feature)
-                                    <li class="mb-2">
-                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                        {{ $feature->name }}
-                                    </li>
-                                @endif
-                            @endforeach
-                            @if(empty($plan->features))
-                                <li class="text-muted text-center">No features listed</li>
-                            @endif
-                        </ul>
-
-                        @auth
-                            @if(auth()->user()->isStoreOwner())
-                                <a href="{{ route('pricing.checkout', $plan) }}" class="btn btn-{{ $plan->is_popular ? 'primary' : 'outline-primary' }} w-100 btn-lg">
-                                    Get Started
-                                </a>
-                            @else
-                                <a href="{{ route('register') }}" class="btn btn-outline-secondary w-100 btn-lg">
-                                    Register as Store Owner
-                                </a>
-                            @endif
-                        @else
-                            <a href="{{ route('register') }}" class="btn btn-{{ $plan->is_popular ? 'primary' : 'outline-primary' }} w-100 btn-lg">
-                                Get Started
-                            </a>
-                        @endauth
+                    <div class="my-4">
+                        <span class="display-4 fw-bold">₹{{ number_format($plan->price, 0) }}</span>
+                        <span class="text-muted">/{{ str_replace('ly', '', $plan->billing_cycle) }}</span>
                     </div>
+
+                    @if($plan->trial_days > 0)
+                    <div class="alert alert-success py-2 mb-3">
+                        <small><i class="bi bi-gift me-1"></i> {{ $plan->trial_days }}-day free trial</small>
+                    </div>
+                    @endif
+
+                    <hr>
+
+                    <ul class="list-unstyled text-start mb-4">
+                        @foreach($plan->features ?? [] as $featureSlug)
+                        @php $feature = $features->flatten()->firstWhere('slug', $featureSlug); @endphp
+                        @if($feature)
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            {{ $feature->name }}
+                        </li>
+                        @endif
+                        @endforeach
+                        @if(empty($plan->features))
+                        <li class="text-muted text-center">No features listed</li>
+                        @endif
+                    </ul>
+
+                    @auth
+                    @if(auth()->user()->isStoreOwner())
+                    <a href="{{ route('pricing.checkout', $plan) }}" class="btn btn-{{ $plan->is_popular ? 'primary' : 'outline-primary' }} w-100 btn-lg">
+                        Get Started
+                    </a>
+                    @else
+                    <a href="{{ route('register') }}" class="btn btn-outline-secondary w-100 btn-lg">
+                        Register as Store Owner
+                    </a>
+                    @endif
+                    @else
+                    <a href="{{ route('register') }}" class="btn btn-{{ $plan->is_popular ? 'primary' : 'outline-primary' }} w-100 btn-lg">
+                        Get Started
+                    </a>
+                    @endauth
                 </div>
             </div>
+        </div>
         @empty
-            <div class="col-12 text-center py-5">
-                <i class="bi bi-credit-card-2-front display-1 text-muted mb-3 d-block"></i>
-                <h4 class="text-muted">No pricing plans available yet</h4>
-                <p class="text-muted">Please check back later.</p>
-            </div>
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-credit-card-2-front display-1 text-muted mb-3 d-block"></i>
+            <h4 class="text-muted">No pricing plans available yet</h4>
+            <p class="text-muted">Please check back later.</p>
+        </div>
         @endforelse
     </div>
 
@@ -96,39 +96,39 @@
                         <tr>
                             <th class="py-3">Feature</th>
                             @foreach($plans as $plan)
-                                <th class="text-center py-3">{{ $plan->name }}</th>
+                            <th class="text-center py-3">{{ $plan->name }}</th>
                             @endforeach
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($categories as $categorySlug => $categoryName)
-                            @php $categoryFeatures = $features->get($categorySlug, collect()); @endphp
-                            @if($categoryFeatures->count() > 0)
-                                <tr class="table-secondary">
-                                    <td colspan="{{ $plans->count() + 1 }}" class="fw-semibold text-uppercase small py-2">
-                                        {{ $categoryName }}
-                                    </td>
-                                </tr>
-                                @foreach($categoryFeatures as $feature)
-                                    <tr>
-                                        <td>
-                                            {{ $feature->name }}
-                                            @if($feature->description)
-                                                <small class="text-muted d-block">{{ $feature->description }}</small>
-                                            @endif
-                                        </td>
-                                        @foreach($plans as $plan)
-                                            <td class="text-center">
-                                                @if(in_array($feature->slug, $plan->features ?? []))
-                                                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
-                                                @else
-                                                    <i class="bi bi-x-circle text-muted fs-5"></i>
-                                                @endif
-                                            </td>
-                                        @endforeach
-                                    </tr>
-                                @endforeach
-                            @endif
+                        @php $categoryFeatures = $features->get($categorySlug, collect()); @endphp
+                        @if($categoryFeatures->count() > 0)
+                        <tr class="table-secondary">
+                            <td colspan="{{ $plans->count() + 1 }}" class="fw-semibold text-uppercase small py-2">
+                                {{ $categoryName }}
+                            </td>
+                        </tr>
+                        @foreach($categoryFeatures as $feature)
+                        <tr>
+                            <td>
+                                {{ $feature->name }}
+                                @if($feature->description)
+                                <small class="text-muted d-block">{{ $feature->description }}</small>
+                                @endif
+                            </td>
+                            @foreach($plans as $plan)
+                            <td class="text-center">
+                                @if(in_array($feature->slug, $plan->features ?? []))
+                                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                @else
+                                <i class="bi bi-x-circle text-muted fs-5"></i>
+                                @endif
+                            </td>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                        @endif
                         @endforeach
                     </tbody>
                 </table>

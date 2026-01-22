@@ -134,7 +134,7 @@ class CashRegisterSession extends Model
             // Refunds decrease cash
             $this->total_cash_sales -= $amount;
         }
-        
+
         $this->save();
 
         return $transaction;

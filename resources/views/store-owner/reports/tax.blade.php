@@ -115,43 +115,43 @@
                     </div>
                     <div class="card-body">
                         @if(count($taxBreakdown) > 0)
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Tax Name</th>
-                                            <th class="text-end">Amount</th>
-                                            <th class="text-end">%</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($taxBreakdown as $tax)
-                                            <tr>
-                                                <td>
-                                                    <span class="badge bg-secondary me-2">{{ $tax->percentage }}%</span>
-                                                    {{ $tax->tax_name }}
-                                                </td>
-                                                <td class="text-end fw-semibold">{{ \App\Helpers\CurrencyHelper::format($tax->total_amount) }}</td>
-                                                <td class="text-end text-muted">
-                                                    {{ $summary['total_tax'] > 0 ? number_format(($tax->total_amount / $summary['total_tax']) * 100, 1) : 0 }}%
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot class="table-light">
-                                        <tr>
-                                            <th>Total</th>
-                                            <th class="text-end">{{ \App\Helpers\CurrencyHelper::format($summary['total_tax']) }}</th>
-                                            <th class="text-end">100%</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Tax Name</th>
+                                        <th class="text-end">Amount</th>
+                                        <th class="text-end">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($taxBreakdown as $tax)
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-secondary me-2">{{ $tax->percentage }}%</span>
+                                            {{ $tax->tax_name }}
+                                        </td>
+                                        <td class="text-end fw-semibold">{{ \App\Helpers\CurrencyHelper::format($tax->total_amount) }}</td>
+                                        <td class="text-end text-muted">
+                                            {{ $summary['total_tax'] > 0 ? number_format(($tax->total_amount / $summary['total_tax']) * 100, 1) : 0 }}%
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot class="table-light">
+                                    <tr>
+                                        <th>Total</th>
+                                        <th class="text-end">{{ \App\Helpers\CurrencyHelper::format($summary['total_tax']) }}</th>
+                                        <th class="text-end">100%</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                         @else
-                            <div class="text-center py-5 text-muted">
-                                <i class="bi bi-pie-chart fs-1 d-block mb-2"></i>
-                                No tax data for selected period
-                            </div>
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-pie-chart fs-1 d-block mb-2"></i>
+                            No tax data for selected period
+                        </div>
                         @endif
                     </div>
                 </div>
@@ -176,9 +176,9 @@
                                 <strong>{{ \App\Helpers\CurrencyHelper::format($dateRange['days'] > 0 ? $summary['total_tax'] / $dateRange['days'] : 0) }}</strong>
                             </div>
                         </div>
-                        
+
                         <hr>
-                        
+
                         <div class="d-grid gap-2">
                             <a href="{{ route('store-owner.tax-settings.index') }}" class="btn btn-outline-primary">
                                 <i class="bi bi-gear me-1"></i> Tax Settings
@@ -210,36 +210,36 @@
                         </thead>
                         <tbody>
                             @forelse($taxTransactions as $transaction)
-                                <tr>
-                                    <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y, H:i') }}</td>
-                                    <td>
-                                        <a href="{{ route('store-owner.orders.show', $transaction->order_id) }}" class="text-decoration-none">
-                                            #{{ $transaction->order_id }}
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-primary">{{ $transaction->tax_name }}</span>
-                                    </td>
-                                    <td class="text-end">{{ \App\Helpers\CurrencyHelper::format($transaction->order?->subtotal ?? 0) }}</td>
-                                    <td class="text-end">{{ $transaction->tax_percentage }}%</td>
-                                    <td class="text-end fw-semibold text-success">{{ \App\Helpers\CurrencyHelper::format($transaction->tax_amount) }}</td>
-                                </tr>
+                            <tr>
+                                <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y, H:i') }}</td>
+                                <td>
+                                    <a href="{{ route('store-owner.orders.show', $transaction->order_id) }}" class="text-decoration-none">
+                                        #{{ $transaction->order_id }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ $transaction->tax_name }}</span>
+                                </td>
+                                <td class="text-end">{{ \App\Helpers\CurrencyHelper::format($transaction->order?->subtotal ?? 0) }}</td>
+                                <td class="text-end">{{ $transaction->tax_percentage }}%</td>
+                                <td class="text-end fw-semibold text-success">{{ \App\Helpers\CurrencyHelper::format($transaction->tax_amount) }}</td>
+                            </tr>
                             @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">
-                                        <i class="bi bi-receipt fs-1 d-block mb-2"></i>
-                                        No tax transactions found for the selected period
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-receipt fs-1 d-block mb-2"></i>
+                                    No tax transactions found for the selected period
+                                </td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
             @if(method_exists($taxTransactions, 'links'))
-                <div class="card-footer">
-                    {{ $taxTransactions->links() }}
-                </div>
+            <div class="card-footer">
+                {{ $taxTransactions->links() }}
+            </div>
             @endif
         </div>
     </div>
@@ -247,14 +247,14 @@
 
 @push('scripts')
 <script>
-document.getElementById('periodSelect').addEventListener('change', function() {
-    const customFields = document.querySelectorAll('.custom-date-field');
-    if (this.value === 'custom') {
-        customFields.forEach(field => field.style.display = 'block');
-    } else {
-        customFields.forEach(field => field.style.display = 'none');
-    }
-});
+    document.getElementById('periodSelect').addEventListener('change', function() {
+        const customFields = document.querySelectorAll('.custom-date-field');
+        if (this.value === 'custom') {
+            customFields.forEach(field => field.style.display = 'block');
+        } else {
+            customFields.forEach(field => field.style.display = 'none');
+        }
+    });
 </script>
 @endpush
 @endsection

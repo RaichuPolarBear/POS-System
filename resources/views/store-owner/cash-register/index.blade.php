@@ -8,111 +8,111 @@
     <div class="col-lg-8">
         <!-- Current Session Card -->
         @if($currentSession)
-            <div class="card mb-4 border-success">
-                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-0"><i class="bi bi-cash-stack me-2"></i>Current Active Session</h5>
-                        <small>Opened by {{ $currentSession->staff?->name ?? 'Staff' }} at {{ $currentSession->opened_at->format('d M Y, h:i A') }}</small>
-                    </div>
-                    <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#closeRegisterModal">
-                        <i class="bi bi-lock me-1"></i> Close Register
-                    </button>
+        <div class="card mb-4 border-success">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-0"><i class="bi bi-cash-stack me-2"></i>Current Active Session</h5>
+                    <small>Opened by {{ $currentSession->staff?->name ?? 'Staff' }} at {{ $currentSession->opened_at->format('d M Y, h:i A') }}</small>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="p-3 bg-light rounded text-center">
-                                <h6 class="text-muted mb-1">Opening Cash</h6>
-                                <h4 class="text-primary mb-0">{{ \App\Helpers\CurrencyHelper::format($currentSession->opening_cash) }}</h4>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-3 bg-light rounded text-center">
-                                <h6 class="text-muted mb-1">Cash Sales</h6>
-                                <h4 class="text-success mb-0">{{ \App\Helpers\CurrencyHelper::format($currentSession->total_cash_sales) }}</h4>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-3 bg-light rounded text-center">
-                                <h6 class="text-muted mb-1">Card Sales</h6>
-                                <h4 class="text-info mb-0">{{ \App\Helpers\CurrencyHelper::format($currentSession->total_card_sales) }}</h4>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-3 bg-success bg-opacity-10 rounded text-center">
-                                <h6 class="text-muted mb-1">Expected Cash</h6>
-                                <h4 class="text-success mb-0">{{ \App\Helpers\CurrencyHelper::format($currentSession->expected_cash) }}</h4>
-                            </div>
+                <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#closeRegisterModal">
+                    <i class="bi bi-lock me-1"></i> Close Register
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="p-3 bg-light rounded text-center">
+                            <h6 class="text-muted mb-1">Opening Cash</h6>
+                            <h4 class="text-primary mb-0">{{ \App\Helpers\CurrencyHelper::format($currentSession->opening_cash) }}</h4>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-light rounded text-center">
+                            <h6 class="text-muted mb-1">Cash Sales</h6>
+                            <h4 class="text-success mb-0">{{ \App\Helpers\CurrencyHelper::format($currentSession->total_cash_sales) }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-light rounded text-center">
+                            <h6 class="text-muted mb-1">Card Sales</h6>
+                            <h4 class="text-info mb-0">{{ \App\Helpers\CurrencyHelper::format($currentSession->total_card_sales) }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-success bg-opacity-10 rounded text-center">
+                            <h6 class="text-muted mb-1">Expected Cash</h6>
+                            <h4 class="text-success mb-0">{{ \App\Helpers\CurrencyHelper::format($currentSession->expected_cash) }}</h4>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- Today's Transactions -->
-                    <div class="mt-4">
-                        <h6 class="mb-3"><i class="bi bi-clock-history me-1"></i> Recent Transactions</h6>
-                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                            <table class="table table-sm">
-                                <thead class="sticky-top bg-white">
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Type</th>
-                                        <th>Payment</th>
-                                        <th>Reference</th>
-                                        <th class="text-end">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($currentSession->transactions()->latest()->take(20)->get() as $transaction)
-                                        <tr>
-                                            <td class="text-muted">{{ $transaction->created_at->format('h:i A') }}</td>
-                                            <td>
-                                                @if($transaction->type === 'sale')
-                                                    <span class="badge bg-success">Sale</span>
-                                                @elseif($transaction->type === 'refund')
-                                                    <span class="badge bg-danger">Refund</span>
-                                                @elseif($transaction->type === 'cash_in')
-                                                    <span class="badge bg-info">Cash In</span>
-                                                @else
-                                                    <span class="badge bg-warning">Cash Out</span>
-                                                @endif
-                                            </td>
-                                            <td class="text-capitalize">{{ $transaction->payment_method }}</td>
-                                            <td>
-                                                @if($transaction->order_id)
-                                                    <a href="#">Order #{{ $transaction->order_id }}</a>
-                                                @else
-                                                    {{ $transaction->notes ?? '-' }}
-                                                @endif
-                                            </td>
-                                            <td class="text-end fw-semibold {{ $transaction->type === 'refund' || $transaction->type === 'cash_out' ? 'text-danger' : 'text-success' }}">
-                                                {{ $transaction->type === 'refund' || $transaction->type === 'cash_out' ? '-' : '+' }}
-                                                {{ \App\Helpers\CurrencyHelper::format($transaction->amount) }}
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="5" class="text-center py-3 text-muted">No transactions yet</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                <!-- Today's Transactions -->
+                <div class="mt-4">
+                    <h6 class="mb-3"><i class="bi bi-clock-history me-1"></i> Recent Transactions</h6>
+                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-sm">
+                            <thead class="sticky-top bg-white">
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Type</th>
+                                    <th>Payment</th>
+                                    <th>Reference</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($currentSession->transactions()->latest()->take(20)->get() as $transaction)
+                                <tr>
+                                    <td class="text-muted">{{ $transaction->created_at->format('h:i A') }}</td>
+                                    <td>
+                                        @if($transaction->type === 'sale')
+                                        <span class="badge bg-success">Sale</span>
+                                        @elseif($transaction->type === 'refund')
+                                        <span class="badge bg-danger">Refund</span>
+                                        @elseif($transaction->type === 'cash_in')
+                                        <span class="badge bg-info">Cash In</span>
+                                        @else
+                                        <span class="badge bg-warning">Cash Out</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-capitalize">{{ $transaction->payment_method }}</td>
+                                    <td>
+                                        @if($transaction->order_id)
+                                        <a href="#">Order #{{ $transaction->order_id }}</a>
+                                        @else
+                                        {{ $transaction->notes ?? '-' }}
+                                        @endif
+                                    </td>
+                                    <td class="text-end fw-semibold {{ $transaction->type === 'refund' || $transaction->type === 'cash_out' ? 'text-danger' : 'text-success' }}">
+                                        {{ $transaction->type === 'refund' || $transaction->type === 'cash_out' ? '-' : '+' }}
+                                        {{ \App\Helpers\CurrencyHelper::format($transaction->amount) }}
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="text-center py-3 text-muted">No transactions yet</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
         @else
-            <!-- No Active Session -->
-            <div class="card mb-4">
-                <div class="card-body text-center py-5">
-                    <div class="mb-4">
-                        <i class="bi bi-cash-coin text-muted" style="font-size: 4rem;"></i>
-                    </div>
-                    <h4>No Active Cash Register Session</h4>
-                    <p class="text-muted mb-4">Start a new cash register session to begin tracking sales</p>
-                    <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#openRegisterModal">
-                        <i class="bi bi-unlock me-2"></i> Open Cash Register
-                    </button>
+        <!-- No Active Session -->
+        <div class="card mb-4">
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="bi bi-cash-coin text-muted" style="font-size: 4rem;"></i>
                 </div>
+                <h4>No Active Cash Register Session</h4>
+                <p class="text-muted mb-4">Start a new cash register session to begin tracking sales</p>
+                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#openRegisterModal">
+                    <i class="bi bi-unlock me-2"></i> Open Cash Register
+                </button>
             </div>
+        </div>
         @endif
 
         <!-- Session History -->
@@ -140,60 +140,60 @@
                         </thead>
                         <tbody>
                             @forelse($sessions as $session)
-                                <tr>
-                                    <td>
-                                        <strong>{{ $session->opened_at->format('d M Y') }}</strong>
-                                        <small class="text-muted d-block">{{ $session->opened_at->format('h:i A') }}</small>
-                                    </td>
-                                    <td>{{ $session->staff?->name ?? 'Staff' }}</td>
-                                    <td class="text-end">{{ \App\Helpers\CurrencyHelper::format($session->opening_cash) }}</td>
-                                    <td class="text-end text-success">{{ \App\Helpers\CurrencyHelper::format($session->total_cash_sales + $session->total_card_sales) }}</td>
-                                    <td class="text-end">{{ $session->closing_cash ? \App\Helpers\CurrencyHelper::format($session->closing_cash) : '-' }}</td>
-                                    <td class="text-center">
-                                        @if($session->closed_at)
-                                            @php
-                                                $diff = $session->closing_cash - $session->expected_cash;
-                                            @endphp
-                                            @if($diff == 0)
-                                                <span class="badge bg-success">Balanced</span>
-                                            @elseif($diff > 0)
-                                                <span class="badge bg-info">+{{ \App\Helpers\CurrencyHelper::format($diff) }}</span>
-                                            @else
-                                                <span class="badge bg-danger">{{ \App\Helpers\CurrencyHelper::format($diff) }}</span>
-                                            @endif
-                                        @else
-                                            <span class="badge bg-warning">Open</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($session->closed_at)
-                                            <span class="badge bg-secondary">Closed</span>
-                                        @else
-                                            <span class="badge bg-success">Active</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('store-owner.cash-register.show', $session) }}" class="btn btn-sm btn-outline-primary">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    <strong>{{ $session->opened_at->format('d M Y') }}</strong>
+                                    <small class="text-muted d-block">{{ $session->opened_at->format('h:i A') }}</small>
+                                </td>
+                                <td>{{ $session->staff?->name ?? 'Staff' }}</td>
+                                <td class="text-end">{{ \App\Helpers\CurrencyHelper::format($session->opening_cash) }}</td>
+                                <td class="text-end text-success">{{ \App\Helpers\CurrencyHelper::format($session->total_cash_sales + $session->total_card_sales) }}</td>
+                                <td class="text-end">{{ $session->closing_cash ? \App\Helpers\CurrencyHelper::format($session->closing_cash) : '-' }}</td>
+                                <td class="text-center">
+                                    @if($session->closed_at)
+                                    @php
+                                    $diff = $session->closing_cash - $session->expected_cash;
+                                    @endphp
+                                    @if($diff == 0)
+                                    <span class="badge bg-success">Balanced</span>
+                                    @elseif($diff > 0)
+                                    <span class="badge bg-info">+{{ \App\Helpers\CurrencyHelper::format($diff) }}</span>
+                                    @else
+                                    <span class="badge bg-danger">{{ \App\Helpers\CurrencyHelper::format($diff) }}</span>
+                                    @endif
+                                    @else
+                                    <span class="badge bg-warning">Open</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($session->closed_at)
+                                    <span class="badge bg-secondary">Closed</span>
+                                    @else
+                                    <span class="badge bg-success">Active</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('store-owner.cash-register.show', $session) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
                             @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-4 text-muted">
-                                        <i class="bi bi-journal-x fs-1 d-block mb-2"></i>
-                                        No session history found
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-muted">
+                                    <i class="bi bi-journal-x fs-1 d-block mb-2"></i>
+                                    No session history found
+                                </td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
             @if($sessions->hasPages())
-                <div class="card-footer">
-                    {{ $sessions->links() }}
-                </div>
+            <div class="card-footer">
+                {{ $sessions->links() }}
+            </div>
             @endif
         </div>
     </div>
@@ -315,8 +315,8 @@
                         <label class="form-label">Actual Closing Cash <span class="text-danger">*</span></label>
                         <div class="input-group input-group-lg">
                             <span class="input-group-text">{{ \App\Helpers\CurrencyHelper::getCurrencySymbol() }}</span>
-                            <input type="number" step="0.01" class="form-control" name="closing_cash" 
-                                   placeholder="{{ $currentSession->expected_cash }}" required autofocus>
+                            <input type="number" step="0.01" class="form-control" name="closing_cash"
+                                placeholder="{{ $currentSession->expected_cash }}" required autofocus>
                         </div>
                         <small class="text-muted">Count the cash in your drawer and enter the total</small>
                     </div>

@@ -221,10 +221,10 @@ class Store extends Model
     {
         return $this->hasOne(Subscription::class)->where(function ($query) {
             $query->where('status', 'active')
-                  ->orWhere(function ($q) {
-                      $q->where('status', 'trial')
+                ->orWhere(function ($q) {
+                    $q->where('status', 'trial')
                         ->where('trial_ends_at', '>', now());
-                  });
+                });
         });
     }
 

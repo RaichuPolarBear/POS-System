@@ -20,13 +20,13 @@
                         <i class="bi bi-cash-stack me-2"></i>
                         Cash Register Session
                         @if(!$session->closed_at)
-                            <span class="badge bg-light text-success ms-2">Active</span>
+                        <span class="badge bg-light text-success ms-2">Active</span>
                         @endif
                     </h5>
                     <small>{{ $session->opened_at->format('l, d M Y') }}</small>
                 </div>
                 @if($session->closed_at)
-                    <span class="badge bg-light text-secondary">Closed</span>
+                <span class="badge bg-light text-secondary">Closed</span>
                 @endif
             </div>
             <div class="card-body">
@@ -50,9 +50,9 @@
                                 <td class="text-muted">Duration:</td>
                                 <td>
                                     @if($session->closed_at)
-                                        {{ $session->opened_at->diffForHumans($session->closed_at, true) }}
+                                    {{ $session->opened_at->diffForHumans($session->closed_at, true) }}
                                     @else
-                                        {{ $session->opened_at->diffForHumans(now(), true) }} (ongoing)
+                                    {{ $session->opened_at->diffForHumans(now(), true) }} (ongoing)
                                     @endif
                                 </td>
                             </tr>
@@ -64,8 +64,8 @@
                             <strong>Opening Notes:</strong>
                             <p class="mb-2">{{ $session->notes ?? 'No notes' }}</p>
                             @if($session->closing_notes)
-                                <strong>Closing Notes:</strong>
-                                <p class="mb-0">{{ $session->closing_notes }}</p>
+                            <strong>Closing Notes:</strong>
+                            <p class="mb-0">{{ $session->closing_notes }}</p>
                             @endif
                         </div>
                     </div>
@@ -96,35 +96,35 @@
                 </div>
 
                 @if($session->closed_at)
-                    <!-- Reconciliation -->
-                    @php
-                        $difference = $session->closing_cash - $session->expected_cash;
-                    @endphp
-                    <div class="mt-4">
-                        <div class="alert {{ $difference == 0 ? 'alert-success' : ($difference > 0 ? 'alert-info' : 'alert-danger') }}">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Cash Reconciliation</strong>
-                                    <p class="mb-0">
-                                        @if($difference == 0)
-                                            <i class="bi bi-check-circle me-1"></i> Cash drawer is balanced perfectly!
-                                        @elseif($difference > 0)
-                                            <i class="bi bi-arrow-up-circle me-1"></i> Cash over by {{ \App\Helpers\CurrencyHelper::format($difference) }}
-                                        @else
-                                            <i class="bi bi-arrow-down-circle me-1"></i> Cash short by {{ \App\Helpers\CurrencyHelper::format(abs($difference)) }}
-                                        @endif
-                                    </p>
-                                </div>
-                                <div class="fs-3 fw-bold">
-                                    @if($difference >= 0)
-                                        +{{ \App\Helpers\CurrencyHelper::format($difference) }}
+                <!-- Reconciliation -->
+                @php
+                $difference = $session->closing_cash - $session->expected_cash;
+                @endphp
+                <div class="mt-4">
+                    <div class="alert {{ $difference == 0 ? 'alert-success' : ($difference > 0 ? 'alert-info' : 'alert-danger') }}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Cash Reconciliation</strong>
+                                <p class="mb-0">
+                                    @if($difference == 0)
+                                    <i class="bi bi-check-circle me-1"></i> Cash drawer is balanced perfectly!
+                                    @elseif($difference > 0)
+                                    <i class="bi bi-arrow-up-circle me-1"></i> Cash over by {{ \App\Helpers\CurrencyHelper::format($difference) }}
                                     @else
-                                        {{ \App\Helpers\CurrencyHelper::format($difference) }}
+                                    <i class="bi bi-arrow-down-circle me-1"></i> Cash short by {{ \App\Helpers\CurrencyHelper::format(abs($difference)) }}
                                     @endif
-                                </div>
+                                </p>
+                            </div>
+                            <div class="fs-3 fw-bold">
+                                @if($difference >= 0)
+                                +{{ \App\Helpers\CurrencyHelper::format($difference) }}
+                                @else
+                                {{ \App\Helpers\CurrencyHelper::format($difference) }}
+                                @endif
                             </div>
                         </div>
                     </div>
+                </div>
                 @endif
             </div>
         </div>
@@ -150,41 +150,41 @@
                         </thead>
                         <tbody>
                             @forelse($session->transactions as $transaction)
-                                <tr>
-                                    <td>{{ $transaction->created_at->format('h:i A') }}</td>
-                                    <td>
-                                        @if($transaction->type === 'sale')
-                                            <span class="badge bg-success">Sale</span>
-                                        @elseif($transaction->type === 'refund')
-                                            <span class="badge bg-danger">Refund</span>
-                                        @elseif($transaction->type === 'cash_in')
-                                            <span class="badge bg-info">Cash In</span>
-                                        @else
-                                            <span class="badge bg-warning">Cash Out</span>
-                                        @endif
-                                    </td>
-                                    <td class="text-capitalize">{{ $transaction->payment_method }}</td>
-                                    <td>
-                                        @if($transaction->order_id)
-                                            <a href="{{ route('store-owner.orders.show', $transaction->order_id) }}" class="text-decoration-none">
-                                                Order #{{ $transaction->order_id }}
-                                            </a>
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td>{{ $transaction->notes ?? '-' }}</td>
-                                    <td class="text-end fw-semibold {{ $transaction->type === 'refund' || $transaction->type === 'cash_out' ? 'text-danger' : 'text-success' }}">
-                                        {{ $transaction->type === 'refund' || $transaction->type === 'cash_out' ? '-' : '+' }}
-                                        {{ \App\Helpers\CurrencyHelper::format($transaction->amount) }}
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>{{ $transaction->created_at->format('h:i A') }}</td>
+                                <td>
+                                    @if($transaction->type === 'sale')
+                                    <span class="badge bg-success">Sale</span>
+                                    @elseif($transaction->type === 'refund')
+                                    <span class="badge bg-danger">Refund</span>
+                                    @elseif($transaction->type === 'cash_in')
+                                    <span class="badge bg-info">Cash In</span>
+                                    @else
+                                    <span class="badge bg-warning">Cash Out</span>
+                                    @endif
+                                </td>
+                                <td class="text-capitalize">{{ $transaction->payment_method }}</td>
+                                <td>
+                                    @if($transaction->order_id)
+                                    <a href="{{ route('store-owner.orders.show', $transaction->order_id) }}" class="text-decoration-none">
+                                        Order #{{ $transaction->order_id }}
+                                    </a>
+                                    @else
+                                    -
+                                    @endif
+                                </td>
+                                <td>{{ $transaction->notes ?? '-' }}</td>
+                                <td class="text-end fw-semibold {{ $transaction->type === 'refund' || $transaction->type === 'cash_out' ? 'text-danger' : 'text-success' }}">
+                                    {{ $transaction->type === 'refund' || $transaction->type === 'cash_out' ? '-' : '+' }}
+                                    {{ \App\Helpers\CurrencyHelper::format($transaction->amount) }}
+                                </td>
+                            </tr>
                             @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">
-                                        No transactions in this session
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    No transactions in this session
+                                </td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>

@@ -31,7 +31,7 @@ class TaxSettingController extends Controller
     public function updateSettings(Request $request)
     {
         $store = auth()->user()->getEffectiveStore();
-        
+
         $validated = $request->validate([
             'taxes_enabled' => 'boolean',
             'tax_type' => 'required|in:item_level,order_level',

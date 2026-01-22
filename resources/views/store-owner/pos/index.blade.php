@@ -994,7 +994,7 @@
         customerSearchInput.addEventListener('input', function() {
             clearTimeout(customerSearchTimeout);
             const query = this.value.trim();
-            
+
             if (query.length < 2) {
                 customerSearchResults.innerHTML = '<div class="text-muted text-center py-3">Type at least 2 characters to search</div>';
                 return;
@@ -1044,37 +1044,38 @@
     if (newCustomerForm) {
         newCustomerForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const formData = new FormData(this);
             const submitBtn = this.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Creating...';
 
-            fetch('{{ route('store-owner.pos.customers.create') }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    selectCustomer(data.customer.id, data.customer.name, data.customer.phone);
-                    this.reset();
-                    document.getElementById('searchCustomerTab').click();
-                } else {
-                    alert('Error: ' + (data.message || 'Failed to create customer'));
-                }
-            })
-            .catch(error => {
-                alert('Error creating customer');
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="bi bi-person-plus me-1"></i> Add Customer';
-            });
+            fetch('{{ route('
+                    store - owner.pos.customers.create ') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        selectCustomer(data.customer.id, data.customer.name, data.customer.phone);
+                        this.reset();
+                        document.getElementById('searchCustomerTab').click();
+                    } else {
+                        alert('Error: ' + (data.message || 'Failed to create customer'));
+                    }
+                })
+                .catch(error => {
+                    alert('Error creating customer');
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="bi bi-person-plus me-1"></i> Add Customer';
+                });
         });
     }
 </script>

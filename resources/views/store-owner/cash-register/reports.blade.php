@@ -121,77 +121,77 @@
                 </thead>
                 <tbody>
                     @forelse($sessions as $session)
-                        <tr>
-                            <td>
-                                <strong>{{ $session->opened_at->format('d M Y') }}</strong>
-                                <small class="text-muted d-block">{{ $session->opened_at->format('h:i A') }}</small>
-                            </td>
-                            <td>{{ $session->staff?->name ?? $session->user?->name ?? 'N/A' }}</td>
-                            <td>
-                                @if($session->closed_at)
-                                    {{ $session->opened_at->diffForHumans($session->closed_at, true) }}
-                                @else
-                                    <span class="badge bg-success">Active</span>
-                                @endif
-                            </td>
-                            <td class="text-end">{{ \App\Helpers\CurrencyHelper::format($session->opening_cash) }}</td>
-                            <td class="text-end text-success">{{ \App\Helpers\CurrencyHelper::format($session->total_cash_sales) }}</td>
-                            <td class="text-end text-info">{{ \App\Helpers\CurrencyHelper::format($session->total_card_sales) }}</td>
-                            <td class="text-end">{{ \App\Helpers\CurrencyHelper::format($session->expected_cash) }}</td>
-                            <td class="text-end">
-                                @if($session->closed_at)
-                                    {{ \App\Helpers\CurrencyHelper::format($session->closing_cash) }}
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                @if($session->closed_at)
-                                    @php $diff = $session->closing_cash - $session->expected_cash; @endphp
-                                    @if($diff == 0)
-                                        <span class="badge bg-success">Balanced</span>
-                                    @elseif($diff > 0)
-                                        <span class="badge bg-info">+{{ \App\Helpers\CurrencyHelper::format($diff) }}</span>
-                                    @else
-                                        <span class="badge bg-danger">{{ \App\Helpers\CurrencyHelper::format($diff) }}</span>
-                                    @endif
-                                @else
-                                    -
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('store-owner.cash-register.show', $session) }}" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            <strong>{{ $session->opened_at->format('d M Y') }}</strong>
+                            <small class="text-muted d-block">{{ $session->opened_at->format('h:i A') }}</small>
+                        </td>
+                        <td>{{ $session->staff?->name ?? $session->user?->name ?? 'N/A' }}</td>
+                        <td>
+                            @if($session->closed_at)
+                            {{ $session->opened_at->diffForHumans($session->closed_at, true) }}
+                            @else
+                            <span class="badge bg-success">Active</span>
+                            @endif
+                        </td>
+                        <td class="text-end">{{ \App\Helpers\CurrencyHelper::format($session->opening_cash) }}</td>
+                        <td class="text-end text-success">{{ \App\Helpers\CurrencyHelper::format($session->total_cash_sales) }}</td>
+                        <td class="text-end text-info">{{ \App\Helpers\CurrencyHelper::format($session->total_card_sales) }}</td>
+                        <td class="text-end">{{ \App\Helpers\CurrencyHelper::format($session->expected_cash) }}</td>
+                        <td class="text-end">
+                            @if($session->closed_at)
+                            {{ \App\Helpers\CurrencyHelper::format($session->closing_cash) }}
+                            @else
+                            -
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if($session->closed_at)
+                            @php $diff = $session->closing_cash - $session->expected_cash; @endphp
+                            @if($diff == 0)
+                            <span class="badge bg-success">Balanced</span>
+                            @elseif($diff > 0)
+                            <span class="badge bg-info">+{{ \App\Helpers\CurrencyHelper::format($diff) }}</span>
+                            @else
+                            <span class="badge bg-danger">{{ \App\Helpers\CurrencyHelper::format($diff) }}</span>
+                            @endif
+                            @else
+                            -
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('store-owner.cash-register.show', $session) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
                     @empty
-                        <tr>
-                            <td colspan="10" class="text-center py-5 text-muted">
-                                <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
-                                No sessions found for the selected period
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="10" class="text-center py-5 text-muted">
+                            <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
+                            No sessions found for the selected period
+                        </td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
     </div>
     @if($sessions->hasPages())
-        <div class="card-footer">
-            {{ $sessions->appends(request()->query())->links() }}
-        </div>
+    <div class="card-footer">
+        {{ $sessions->appends(request()->query())->links() }}
+    </div>
     @endif
 </div>
 
 @push('scripts')
 <script>
-document.getElementById('periodSelect').addEventListener('change', function() {
-    const customFields = document.querySelectorAll('.custom-date');
-    customFields.forEach(field => {
-        field.style.display = this.value === 'custom' ? 'block' : 'none';
+    document.getElementById('periodSelect').addEventListener('change', function() {
+        const customFields = document.querySelectorAll('.custom-date');
+        customFields.forEach(field => {
+            field.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
     });
-});
 </script>
 @endpush
 @endsection

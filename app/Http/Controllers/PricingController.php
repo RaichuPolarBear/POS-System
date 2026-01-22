@@ -42,7 +42,7 @@ class PricingController extends Controller
         }
 
         $user = auth()->user();
-        
+
         // Check if user has a store
         if (!$user || !$user->isStoreOwner()) {
             return redirect()->route('pricing')
@@ -107,8 +107,8 @@ class PricingController extends Controller
                 'status' => $plan->trial_days > 0 ? 'trial' : 'active',
                 'trial_ends_at' => $plan->trial_days > 0 ? now()->addDays($plan->trial_days) : null,
                 'starts_at' => now(),
-                'ends_at' => $plan->trial_days > 0 
-                    ? now()->addDays($plan->trial_days) 
+                'ends_at' => $plan->trial_days > 0
+                    ? now()->addDays($plan->trial_days)
                     : $this->calculateEndDate($plan->billing_cycle),
                 'amount_paid' => 0,
             ]);

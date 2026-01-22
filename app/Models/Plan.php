@@ -71,7 +71,7 @@ class Plan extends Model
      */
     public function getPriceDisplayAttribute(): string
     {
-        $cycle = match($this->billing_cycle) {
+        $cycle = match ($this->billing_cycle) {
             'monthly' => '/month',
             'quarterly' => '/quarter',
             'yearly' => '/year',

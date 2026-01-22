@@ -419,8 +419,8 @@ class POSController extends Controller
         $customers = $store->customers()
             ->where(function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('phone', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('phone', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             })
             ->select('id', 'name', 'phone', 'email')
             ->limit(10)

@@ -18,7 +18,7 @@ class TaxReportController extends Controller
     {
         $store = auth()->user()->getEffectiveStore();
         $period = $request->input('period', 'month');
-        
+
         // Get date range
         $dates = $this->getDateRange($period, $request);
         $startDate = $dates['start'];
@@ -27,15 +27,15 @@ class TaxReportController extends Controller
         // Get tax summary
         $taxSummary = OrderTax::whereHas('order', function ($query) use ($store, $startDate, $endDate) {
             $query->where('store_id', $store->id)
-                  ->where('payment_status', 'paid')
-                  ->whereBetween('created_at', [$startDate, $endDate]);
+                ->where('payment_status', 'paid')
+                ->whereBetween('created_at', [$startDate, $endDate]);
         })
-        ->select('tax_name', 'tax_percentage')
-        ->selectRaw('SUM(taxable_amount) as total_taxable')
-        ->selectRaw('SUM(tax_amount) as total_tax')
-        ->selectRaw('COUNT(*) as transaction_count')
-        ->groupBy('tax_name', 'tax_percentage')
-        ->get();
+            ->select('tax_name', 'tax_percentage')
+            ->selectRaw('SUM(taxable_amount) as total_taxable')
+            ->selectRaw('SUM(tax_amount) as total_tax')
+            ->selectRaw('COUNT(*) as transaction_count')
+            ->groupBy('tax_name', 'tax_percentage')
+            ->get();
 
         // Get total tax collected
         $totalTax = $taxSummary->sum('total_tax');
@@ -44,15 +44,15 @@ class TaxReportController extends Controller
         // Get daily breakdown
         $dailyBreakdown = OrderTax::whereHas('order', function ($query) use ($store, $startDate, $endDate) {
             $query->where('store_id', $store->id)
-                  ->where('payment_status', 'paid')
-                  ->whereBetween('created_at', [$startDate, $endDate]);
+                ->where('payment_status', 'paid')
+                ->whereBetween('created_at', [$startDate, $endDate]);
         })
-        ->join('orders', 'order_taxes.order_id', '=', 'orders.id')
-        ->selectRaw('DATE(orders.created_at) as date')
-        ->selectRaw('SUM(order_taxes.tax_amount) as total_tax')
-        ->groupBy('date')
-        ->orderBy('date')
-        ->get();
+            ->join('orders', 'order_taxes.order_id', '=', 'orders.id')
+            ->selectRaw('DATE(orders.created_at) as date')
+            ->selectRaw('SUM(order_taxes.tax_amount) as total_tax')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
 
         // Quick stats
         $stats = [

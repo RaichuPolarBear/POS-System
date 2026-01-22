@@ -19,7 +19,7 @@ class CashRegisterController extends Controller
 
         // Check for any open session
         $currentSession = CashRegisterSession::getAnyOpenSession($store->id);
-        
+
         // Get last closed session for suggested opening amount
         $lastClosedSession = CashRegisterSession::getLastClosedSession($store->id);
         $suggestedOpeningCash = $lastClosedSession ? $lastClosedSession->closing_cash : 0;
@@ -95,7 +95,7 @@ class CashRegisterController extends Controller
     public function close(Request $request, CashRegisterSession $session)
     {
         $store = auth()->user()->getEffectiveStore();
-        
+
         if ($session->store_id !== $store->id) {
             abort(403);
         }
@@ -122,7 +122,7 @@ class CashRegisterController extends Controller
     public function addCash(Request $request, CashRegisterSession $session)
     {
         $store = auth()->user()->getEffectiveStore();
-        
+
         if ($session->store_id !== $store->id) {
             abort(403);
         }

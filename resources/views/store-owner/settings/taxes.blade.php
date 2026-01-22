@@ -18,7 +18,7 @@
 
                     <div class="mb-4">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="taxes_enabled" name="taxes_enabled" value="1" 
+                            <input class="form-check-input" type="checkbox" id="taxes_enabled" name="taxes_enabled" value="1"
                                 {{ old('taxes_enabled', $taxSettings->taxes_enabled) ? 'checked' : '' }}>
                             <label class="form-check-label" for="taxes_enabled">
                                 <strong>Enable Taxes</strong>
@@ -46,12 +46,12 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="tax_number" class="form-label">GST/Tax Registration Number</label>
-                                <input type="text" class="form-control @error('tax_number') is-invalid @enderror" 
-                                       id="tax_number" name="tax_number" 
-                                       value="{{ old('tax_number', $taxSettings->tax_number) }}"
-                                       placeholder="e.g., 22AAAAA0000A1Z5">
+                                <input type="text" class="form-control @error('tax_number') is-invalid @enderror"
+                                    id="tax_number" name="tax_number"
+                                    value="{{ old('tax_number', $taxSettings->tax_number) }}"
+                                    placeholder="e.g., 22AAAAA0000A1Z5">
                                 @error('tax_number')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -108,84 +108,84 @@
                         </thead>
                         <tbody>
                             @forelse($taxes as $tax)
-                                <tr>
-                                    <td class="fw-semibold">{{ $tax->name }}</td>
-                                    <td>{{ $tax->percentage }}%</td>
-                                    <td>
-                                        @if($tax->is_enabled)
-                                            <span class="badge bg-success">Enabled</span>
-                                        @else
-                                            <span class="badge bg-secondary">Disabled</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <button type="button" class="btn btn-outline-primary" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#editTaxModal{{ $tax->id }}">
-                                                <i class="bi bi-pencil"></i>
+                            <tr>
+                                <td class="fw-semibold">{{ $tax->name }}</td>
+                                <td>{{ $tax->percentage }}%</td>
+                                <td>
+                                    @if($tax->is_enabled)
+                                    <span class="badge bg-success">Enabled</span>
+                                    @else
+                                    <span class="badge bg-secondary">Disabled</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editTaxModal{{ $tax->id }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <form action="{{ route('store-owner.tax-settings.toggle-tax', $tax) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-outline-{{ $tax->is_enabled ? 'warning' : 'success' }}">
+                                                <i class="bi bi-{{ $tax->is_enabled ? 'pause' : 'play' }}"></i>
                                             </button>
-                                            <form action="{{ route('store-owner.tax-settings.toggle-tax', $tax) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="submit" class="btn btn-outline-{{ $tax->is_enabled ? 'warning' : 'success' }}">
-                                                    <i class="bi bi-{{ $tax->is_enabled ? 'pause' : 'play' }}"></i>
-                                                </button>
-                                            </form>
-                                            <form action="{{ route('store-owner.tax-settings.destroy-tax', $tax) }}" method="POST" class="d-inline" 
-                                                  onsubmit="return confirm('Are you sure you want to delete this tax?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </form>
+                                        <form action="{{ route('store-owner.tax-settings.destroy-tax', $tax) }}" method="POST" class="d-inline"
+                                            onsubmit="return confirm('Are you sure you want to delete this tax?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
 
-                                <!-- Edit Tax Modal -->
-                                <div class="modal fade" id="editTaxModal{{ $tax->id }}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form action="{{ route('store-owner.tax-settings.update-tax', $tax) }}" method="POST">
-                                                @csrf
-                                                @method('PUT')
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Edit Tax</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <!-- Edit Tax Modal -->
+                            <div class="modal fade" id="editTaxModal{{ $tax->id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ route('store-owner.tax-settings.update-tax', $tax) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Edit Tax</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Tax Name <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" name="name" value="{{ $tax->name }}" required>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Tax Name <span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" name="name" value="{{ $tax->name }}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Percentage <span class="text-danger">*</span></label>
-                                                        <div class="input-group">
-                                                            <input type="number" step="0.01" class="form-control" name="percentage" value="{{ $tax->percentage }}" required>
-                                                            <span class="input-group-text">%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="is_enabled" value="1" {{ $tax->is_enabled ? 'checked' : '' }}>
-                                                        <label class="form-check-label">Enabled</label>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Percentage <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <input type="number" step="0.01" class="form-control" name="percentage" value="{{ $tax->percentage }}" required>
+                                                        <span class="input-group-text">%</span>
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-primary">Update Tax</button>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="is_enabled" value="1" {{ $tax->is_enabled ? 'checked' : '' }}>
+                                                    <label class="form-check-label">Enabled</label>
                                                 </div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-primary">Update Tax</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
                             @empty
-                                <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted">
-                                        <i class="bi bi-percent fs-1 d-block mb-2"></i>
-                                        No taxes configured. Add your first tax rate.
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">
+                                    <i class="bi bi-percent fs-1 d-block mb-2"></i>
+                                    No taxes configured. Add your first tax rate.
+                                </td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -290,23 +290,23 @@
 </div>
 
 @if(session('success'))
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div class="toast show" role="alert">
-            <div class="toast-header bg-success text-white">
-                <i class="bi bi-check-circle me-2"></i>
-                <strong class="me-auto">Success</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
-            </div>
-            <div class="toast-body">{{ session('success') }}</div>
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div class="toast show" role="alert">
+        <div class="toast-header bg-success text-white">
+            <i class="bi bi-check-circle me-2"></i>
+            <strong class="me-auto">Success</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
+        <div class="toast-body">{{ session('success') }}</div>
     </div>
+</div>
 @endif
 
 @push('scripts')
 <script>
-document.getElementById('taxes_enabled').addEventListener('change', function() {
-    document.querySelector('.tax-settings-fields').style.opacity = this.checked ? '1' : '0.5';
-});
+    document.getElementById('taxes_enabled').addEventListener('change', function() {
+        document.querySelector('.tax-settings-fields').style.opacity = this.checked ? '1' : '0.5';
+    });
 </script>
 @endpush
 @endsection

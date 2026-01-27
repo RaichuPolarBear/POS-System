@@ -7,6 +7,9 @@ use App\Http\Middleware\CheckInstallation;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\File;
+use Illuminate\Database\QueryException;
+use PDOException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -28,5 +31,24 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Handle ALL database connection errors - redirect to installer if not installed
+        $exceptions->render(function (\Throwable $e, $request) {
+            // Check if this is a database-related error
+            $isDatabaseError = $e instanceof QueryException
+                || $e instanceof PDOException
+                || $e instanceof \Illuminate\Database\SQLiteDatabaseDoesNotExistException
+                || str_contains(get_class($e), 'Database')
+                || str_contains($e->getMessage(), 'database')
+                || str_contains($e->getMessage(), 'SQLSTATE')
+                || str_contains($e->getMessage(), 'sqlite');
+            
+            if ($isDatabaseError && !File::exists(storage_path('installed'))) {
+                // Skip redirect if already on install route
+                if (!$request->is('install', 'install/*')) {
+                    return redirect('/install');
+                }
+            }
+            
+            return null; // Let Laravel handle it normally
+        });
     })->create();

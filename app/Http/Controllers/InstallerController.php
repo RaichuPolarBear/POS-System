@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\SystemSetting;
 
@@ -19,6 +20,9 @@ class InstallerController extends Controller
             return redirect('/');
         }
 
+        // Ensure .env file exists (copy from .env.example if not)
+        $this->ensureEnvExists();
+
         return view('installer.welcome');
     }
 
@@ -28,6 +32,8 @@ class InstallerController extends Controller
             return redirect('/');
         }
 
+        // Ensure .env file exists
+        $this->ensureEnvExists();
         $requirements = [
             'php' => [
                 'required' => '8.1.0',
@@ -223,9 +229,59 @@ class InstallerController extends Controller
         return File::exists(storage_path('installed'));
     }
 
+    /**
+     * Ensure .env file exists. Create from .env.example if not.
+     * Also generates APP_KEY if not set.
+     */
+    private function ensureEnvExists(): void
+    {
+        $envPath = base_path('.env');
+        $examplePath = base_path('.env.example');
+
+        // If .env doesn't exist, create from .env.example
+        if (!File::exists($envPath)) {
+            if (File::exists($examplePath)) {
+                File::copy($examplePath, $envPath);
+            } else {
+                // Create a minimal .env file
+                $minimalEnv = "APP_NAME=\"POS System\"\n";
+                $minimalEnv .= "APP_ENV=production\n";
+                $minimalEnv .= "APP_KEY=\n";
+                $minimalEnv .= "APP_DEBUG=false\n";
+                $minimalEnv .= "APP_TIMEZONE=Asia/Kolkata\n";
+                $minimalEnv .= "APP_URL=http://localhost\n\n";
+                $minimalEnv .= "DB_CONNECTION=mysql\n";
+                $minimalEnv .= "DB_HOST=127.0.0.1\n";
+                $minimalEnv .= "DB_PORT=3306\n";
+                $minimalEnv .= "DB_DATABASE=pos_system\n";
+                $minimalEnv .= "DB_USERNAME=root\n";
+                $minimalEnv .= "DB_PASSWORD=\n\n";
+                $minimalEnv .= "SESSION_DRIVER=file\n";
+                $minimalEnv .= "CACHE_STORE=file\n";
+                $minimalEnv .= "QUEUE_CONNECTION=sync\n";
+                
+                File::put($envPath, $minimalEnv);
+            }
+        }
+
+        // Generate APP_KEY if not set
+        $envContent = File::get($envPath);
+        if (preg_match('/^APP_KEY=$/m', $envContent) || preg_match('/^APP_KEY=\s*$/m', $envContent)) {
+            // Generate a new key
+            $key = 'base64:' . base64_encode(random_bytes(32));
+            $this->updateEnv(['APP_KEY' => $key]);
+        }
+    }
+
     private function updateEnv(array $values): void
     {
         $envPath = base_path('.env');
+        
+        // Ensure .env exists before trying to update it
+        if (!File::exists($envPath)) {
+            $this->ensureEnvExists();
+        }
+        
         $envContent = File::get($envPath);
 
         foreach ($values as $key => $value) {

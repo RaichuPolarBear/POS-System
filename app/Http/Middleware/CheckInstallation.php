@@ -14,26 +14,31 @@ class CheckInstallation
      *
      * Check if the application is installed. If not, redirect to the installer.
      * This middleware should be applied to all routes except the installer routes.
+     * 
+     * IMPORTANT: This middleware uses file-based checks only - NO database access!
+     * This allows the installer to run even when the database is not configured.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Skip check for installer routes
-        if ($request->is('install', 'install/*')) {
+        // Skip check for installer routes and static assets
+        if ($request->is('install', 'install/*', 'build/*', 'storage/*', 'favicon.ico')) {
             return $next($request);
         }
 
-        // Check if application is installed
+        // Check if application is installed using file-based flag (no DB access)
         if (!$this->isInstalled()) {
-            return redirect()->route('installer.index');
+            // Use url() instead of route() to avoid potential issues
+            return redirect('/install');
         }
 
         return $next($request);
     }
 
     /**
-     * Check if the application has been installed
+     * Check if the application has been installed.
+     * Uses a file-based flag to avoid any database connection.
      */
     private function isInstalled(): bool
     {

@@ -466,6 +466,8 @@
         display: flex;
         align-items: center;
         gap: 24px;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .payment-icon {
@@ -479,6 +481,45 @@
         color: #94a3b8;
         font-weight: 600;
         font-size: 0.75rem;
+        flex-shrink: 0;
+    }
+    
+    /* Payment strip mobile */
+    @media (max-width: 768px) {
+        .payment-strip {
+            padding: 15px 20px;
+            margin-top: 30px;
+            gap: 15px;
+            flex-direction: column;
+        }
+        .payment-label {
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .payment-icons {
+            gap: 12px;
+        }
+        .payment-icon {
+            width: 45px;
+            height: 28px;
+            font-size: 0.65rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .payment-strip {
+            padding: 12px 15px;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        .payment-icons {
+            gap: 8px;
+        }
+        .payment-icon {
+            width: 40px;
+            height: 26px;
+            font-size: 0.6rem;
+        }
     }
 
     /* Features Section */
@@ -1610,7 +1651,7 @@
             <div class="col-md-3">
                 <div class="business-card">
                     @if($store->logo)
-                    <img src="{{ Storage::url($store->logo) }}" alt="{{ $store->name }}"
+                    <img src="{{ asset('storage/' . $store->logo) }}" alt="{{ $store->name }}"
                         class="rounded-circle mb-3" style="width: 70px; height: 70px; object-fit: cover;">
                     @else
                     <div class="business-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white;">

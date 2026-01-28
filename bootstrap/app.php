@@ -9,7 +9,6 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\QueryException;
-use PDOException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -35,7 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (\Throwable $e, $request) {
             // Check if this is a database-related error
             $isDatabaseError = $e instanceof QueryException
-                || $e instanceof PDOException
+                || $e instanceof \PDOException
                 || $e instanceof \Illuminate\Database\SQLiteDatabaseDoesNotExistException
                 || str_contains(get_class($e), 'Database')
                 || str_contains($e->getMessage(), 'database')

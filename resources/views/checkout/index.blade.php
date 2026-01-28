@@ -39,6 +39,61 @@
         align-items: center;
         justify-content: center;
     }
+    
+    /* Mobile responsive styles */
+    @media (max-width: 767px) {
+        .payment-option .card-body {
+            padding: 0.75rem;
+        }
+        .payment-option .card-body i {
+            font-size: 1.5rem !important;
+            margin-bottom: 0.25rem !important;
+        }
+        .payment-option .card-body .fw-semibold {
+            font-size: 0.85rem;
+        }
+        .payment-option .card-body p {
+            font-size: 0.7rem;
+            margin-bottom: 0;
+        }
+        .col-md-6 .payment-option {
+            margin-bottom: 0.5rem;
+        }
+        /* Order summary sticky fix */
+        .sticky-top {
+            position: relative !important;
+            top: 0 !important;
+        }
+        /* Card spacing */
+        .card.mb-4 {
+            margin-bottom: 1rem !important;
+        }
+        /* Button sizing */
+        .btn-lg {
+            font-size: 0.95rem;
+            padding: 0.6rem 1rem;
+        }
+    }
+    
+    @media (max-width: 575px) {
+        .payment-option .card-body {
+            padding: 0.5rem;
+        }
+        .payment-option .card-body i {
+            font-size: 1.25rem !important;
+        }
+        .payment-option .card-body .fw-semibold {
+            font-size: 0.8rem;
+        }
+        /* Contact info on small screens */
+        .card-body .d-flex.align-items-center > div:first-child {
+            width: 40px !important;
+            height: 40px !important;
+        }
+        .card-body .d-flex.align-items-center > div:first-child i {
+            font-size: 1.25rem !important;
+        }
+    }
 </style>
 @endpush
 

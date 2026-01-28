@@ -110,6 +110,191 @@
         footer p {
             color: rgba(255, 255, 255, 0.7);
         }
+        
+        /* ============================
+           MOBILE RESPONSIVE STYLES
+           ============================ */
+        
+        @media (max-width: 768px) {
+            /* Navbar mobile */
+            .navbar-brand img {
+                height: 28px !important;
+            }
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            
+            /* Container padding */
+            .container {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            
+            /* Cards mobile */
+            .card {
+                margin-bottom: 1rem;
+            }
+            .card-header {
+                padding: 0.75rem 1rem;
+            }
+            .card-header h5 {
+                font-size: 1rem;
+            }
+            .card-body {
+                padding: 1rem;
+            }
+            
+            /* Buttons mobile */
+            .btn-lg {
+                font-size: 1rem;
+                padding: 0.6rem 1.2rem;
+            }
+            
+            /* Form controls mobile */
+            .form-control, .form-select {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            /* Payment options mobile */
+            .payment-option .card-body {
+                padding: 0.75rem;
+            }
+            .payment-option .card-body i {
+                font-size: 2rem !important;
+            }
+            .payment-option .card-body .fw-semibold {
+                font-size: 0.9rem;
+            }
+            .payment-option .card-body .small {
+                font-size: 0.75rem;
+            }
+            
+            /* Cart item mobile */
+            .d-flex.align-items-center.p-3 {
+                flex-wrap: wrap;
+                padding: 0.75rem !important;
+            }
+            .d-flex.align-items-center.p-3 > .me-3 img,
+            .d-flex.align-items-center.p-3 > .me-3 > div {
+                width: 60px !important;
+                height: 60px !important;
+            }
+            .d-flex.align-items-center.p-3 > .text-end {
+                width: 100%;
+                text-align: right;
+                margin-top: 0.5rem;
+                margin-left: 0 !important;
+            }
+            
+            /* Order summary mobile */
+            .sticky-top {
+                position: relative !important;
+                top: 0 !important;
+            }
+            
+            /* Modal mobile */
+            .modal-dialog {
+                margin: 0.5rem;
+            }
+            .modal-body {
+                padding: 1rem;
+            }
+            
+            /* Store header mobile */
+            .store-header {
+                padding: 1rem 0 !important;
+            }
+            .store-header .row {
+                flex-direction: column;
+                text-align: center;
+            }
+            .store-header .col-auto {
+                margin-bottom: 0.75rem;
+            }
+            .store-header h1 {
+                font-size: 1.5rem;
+            }
+            .store-header .col {
+                margin-bottom: 0.75rem;
+            }
+            
+            /* Stripe card element mobile */
+            #card-element {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 575px) {
+            /* Smaller screens */
+            .py-4 {
+                padding-top: 1rem !important;
+                padding-bottom: 1rem !important;
+            }
+            .py-5 {
+                padding-top: 1.5rem !important;
+                padding-bottom: 1.5rem !important;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .fs-5 {
+                font-size: 1rem !important;
+            }
+            
+            /* Product grid mobile */
+            .col-md-4, .col-lg-3, .col-md-6 {
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+            
+            /* Cart quantity buttons */
+            .btn-sm {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.8rem;
+            }
+            
+            /* Store category sidebar mobile */
+            .col-lg-3 {
+                margin-bottom: 1rem;
+            }
+            .list-group-item {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Payment page mobile */
+            .col-md-6 {
+                padding: 0;
+            }
+            
+            /* Navbar dropdown */
+            .dropdown-menu {
+                position: static !important;
+                transform: none !important;
+                width: 100%;
+            }
+        }
+        
+        /* Prevent horizontal overflow */
+        html, body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        
+        .container, .container-fluid {
+            overflow-x: hidden;
+        }
+        
+        /* Stripe Elements mobile fix */
+        .StripeElement {
+            box-sizing: border-box;
+            width: 100%;
+        }
+        
+        #card-element {
+            width: 100%;
+            min-height: 44px;
+        }
     </style>
     @stack('styles')
 </head>

@@ -9,7 +9,11 @@
         height: calc(100vh - 140px);
     }
     
-    /* Mobile: Stack cart below products */
+    /* ============================
+       MOBILE RESPONSIVE STYLES
+       ============================ */
+    
+    /* Medium screens (tablets) */
     @media (max-width: 991px) {
         .pos-container {
             height: auto;
@@ -24,22 +28,23 @@
             left: 0;
             right: 0;
             z-index: 1040;
-            max-height: 50vh;
+            max-height: 45vh;
             padding: 0;
+            transition: transform 0.3s ease;
         }
         .pos-container > .col-lg-4 .card {
             border-radius: 16px 16px 0 0;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
         }
         .pos-container > .col-lg-4 .cart-items {
-            max-height: 25vh;
+            max-height: 20vh;
         }
         .pos-container > .col-lg-8 {
-            padding-bottom: 200px;
+            padding-bottom: 280px;
         }
         .products-grid {
             height: auto !important;
-            max-height: 60vh;
+            max-height: none;
         }
         /* Mobile cart toggle */
         .mobile-cart-toggle {
@@ -48,14 +53,333 @@
             bottom: 20px;
             right: 20px;
             z-index: 1050;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         .cart-section.collapsed {
             transform: translateY(calc(100% - 60px));
+        }
+        
+        /* Tab navigation mobile */
+        #posTabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 5px;
+        }
+        #posTabs .nav-item {
+            flex-shrink: 0;
+        }
+        #posTabs .nav-link {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        #posTabs .nav-link i {
+            margin-right: 0.25rem;
+        }
+        
+        /* Cart summary mobile */
+        .cart-summary {
+            padding: 10px;
+        }
+        .cart-summary .mb-2,
+        .cart-summary .mb-3 {
+            margin-bottom: 0.5rem !important;
+        }
+        .cart-summary .fs-5 {
+            font-size: 1rem !important;
+        }
+        
+        /* Payment buttons mobile */
+        .cart-summary .btn-group .btn {
+            padding: 0.4rem 0.5rem;
+            font-size: 0.75rem;
+        }
+        .cart-summary .btn-group .btn i {
+            display: none;
+        }
+        .cart-summary .btn-lg {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Discount input */
+        .cart-summary .input-group {
+            width: 80px !important;
+        }
+        .cart-summary .input-group input {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        /* Scanner section mobile */
+        .scanner-section {
+            padding: 15px;
+        }
+        #qr-reader {
+            max-width: 100% !important;
+        }
+        
+        /* Pending orders table mobile */
+        #pending-panel .table-responsive {
+            font-size: 0.8rem;
+        }
+        #pending-panel .table th,
+        #pending-panel .table td {
+            padding: 0.4rem;
+            white-space: nowrap;
+        }
+        #pending-panel .btn-sm {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.7rem;
+        }
+        
+        /* Action buttons */
+        .action-btn {
+            padding: 10px 16px;
+            font-size: 0.9rem;
+        }
+    }
+    
+    /* Small screens (phones) */
+    @media (max-width: 575px) {
+        /* Reduce main content padding */
+        .content-wrapper {
+            padding: 0.75rem !important;
+        }
+        
+        /* Tab navigation even smaller */
+        #posTabs .nav-link {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+        }
+        #posTabs .nav-link i {
+            margin-right: 0 !important;
+        }
+        #posTabs .nav-link .me-2 {
+            margin-right: 0.15rem !important;
+        }
+        
+        /* Products grid 2 columns on small phones */
+        .product-item.col-6 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        
+        /* Product cards */
+        .product-card img {
+            height: 70px;
+        }
+        .product-card .card-body {
+            padding: 6px !important;
+        }
+        .product-card .card-title {
+            font-size: 0.7rem;
+            margin-bottom: 2px !important;
+            line-height: 1.2;
+        }
+        .product-card .card-text {
+            font-size: 0.8rem;
+        }
+        .product-card small {
+            font-size: 0.65rem;
+        }
+        
+        /* Category pills */
+        .category-pills .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+        }
+        
+        /* Search input */
+        #searchProducts {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        /* Cart header */
+        .cart-section .card-header {
+            padding: 0.5rem 0.75rem;
+        }
+        .cart-section .card-header h5 {
+            font-size: 0.9rem;
+        }
+        .cart-section .card-header .btn-sm {
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+        }
+        
+        /* Customer selection area */
+        .px-3.py-2.border-bottom {
+            padding: 0.5rem !important;
+        }
+        #selectedCustomerDisplay {
+            font-size: 0.85rem;
+        }
+        
+        /* Cart items */
+        .cart-item {
+            padding: 8px;
+        }
+        .cart-item h6 {
+            font-size: 0.8rem;
+        }
+        .cart-item .text-primary {
+            font-size: 0.75rem;
+        }
+        .qty-btn {
+            width: 26px;
+            height: 26px;
+            font-size: 0.75rem;
+        }
+        
+        /* Cart summary */
+        .cart-summary {
+            padding: 8px;
+        }
+        .cart-summary > div {
+            font-size: 0.8rem;
+        }
+        .cart-summary .fs-5 {
+            font-size: 0.95rem !important;
+        }
+        .cart-summary hr {
+            margin: 0.5rem 0;
+        }
+        
+        /* Payment method buttons */
+        .cart-summary .btn-group {
+            flex-wrap: wrap;
+        }
+        .cart-summary .btn-group .btn {
+            flex: 1 1 30%;
+            padding: 0.35rem 0.4rem;
+            font-size: 0.7rem;
+            border-radius: 0.25rem !important;
+            margin: 1px;
+        }
+        .cart-summary .form-label {
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        /* Complete order button */
+        .cart-summary .btn-lg {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+        }
+        
+        /* Cart bottom padding for products */
+        .pos-container > .col-lg-8 {
+            padding-bottom: 320px;
+        }
+        
+        /* Fixed cart height on small screens */
+        .pos-container > .col-lg-4 {
+            max-height: 50vh;
+        }
+        .pos-container > .col-lg-4 .cart-items {
+            max-height: 15vh;
+        }
+        
+        /* QR Scanner panel mobile */
+        #scanner-panel .col-md-6 {
+            padding: 0.5rem;
+        }
+        .scanner-section {
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .scanner-section h5 {
+            font-size: 0.9rem;
+        }
+        
+        /* Scanned order card */
+        .scanned-order-card {
+            font-size: 0.85rem;
+        }
+        .scanned-order-card .card-header h5 {
+            font-size: 0.9rem;
+        }
+        .scanned-order-card .table {
+            font-size: 0.75rem;
+        }
+        .scanned-order-card .action-btn {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+        
+        /* Order status badge */
+        .order-status-badge {
+            font-size: 0.7rem;
+            padding: 4px 10px;
+        }
+        
+        /* Manual lookup input */
+        .input-group .form-control,
+        .input-group .btn,
+        .input-group .input-group-text {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.6rem;
+        }
+        
+        /* Pending orders mobile */
+        #pending-panel .card-header h5 {
+            font-size: 0.9rem;
+        }
+        #pending-panel .table th,
+        #pending-panel .table td {
+            padding: 0.3rem;
+            font-size: 0.7rem;
+        }
+        #pending-panel .badge {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.4rem;
+        }
+        #pending-panel .btn-sm {
+            padding: 0.15rem 0.3rem;
+            font-size: 0.65rem;
+        }
+        
+        /* Mobile cart toggle */
+        .mobile-cart-toggle {
+            width: 45px;
+            height: 45px;
+            font-size: 1rem;
+            bottom: 15px;
+            right: 15px;
+        }
+    }
+    
+    /* Extra small screens (very small phones) */
+    @media (max-width: 375px) {
+        #posTabs .nav-link {
+            padding: 0.35rem 0.5rem;
+            font-size: 0.7rem;
+        }
+        
+        .product-card img {
+            height: 60px;
+        }
+        .product-card .card-title {
+            font-size: 0.65rem;
+        }
+        .product-card .card-text {
+            font-size: 0.75rem;
+        }
+        
+        .cart-summary .btn-group .btn {
+            font-size: 0.65rem;
+            padding: 0.3rem;
+        }
+        
+        .cart-summary .btn-lg {
+            font-size: 0.8rem;
+            padding: 0.45rem 0.6rem;
         }
     }
 
@@ -85,22 +409,6 @@
     .product-card img {
         height: 120px;
         object-fit: cover;
-    }
-    
-    @media (max-width: 575px) {
-        .product-card img {
-            height: 80px;
-        }
-        .product-card .card-body {
-            padding: 8px !important;
-        }
-        .product-card .card-title {
-            font-size: 0.75rem;
-            margin-bottom: 4px !important;
-        }
-        .product-card .card-text {
-            font-size: 0.85rem;
-        }
     }
 
     .cart-section {
@@ -140,6 +448,7 @@
         overflow-x: auto;
         white-space: nowrap;
         padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
     }
 
     .category-pills::-webkit-scrollbar {
@@ -1220,22 +1529,40 @@
 
             customerSearchTimeout = setTimeout(() => {
                 fetch(`{{ route('store-owner.pos.customers.search') }}?q=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        if (data.customers.length === 0) {
-                            customerSearchResults.innerHTML = '<div class="text-muted text-center py-3">No customers found</div>';
+                        // Show error if server returned one
+                        if (data.error) {
+                            customerSearchResults.innerHTML = `<div class="text-danger text-center py-3">Error: ${data.error}</div>`;
+                            return;
+                        }
+                        
+                        if (!data.customers || data.customers.length === 0) {
+                            customerSearchResults.innerHTML = '<div class="text-muted text-center py-3">No customers found. Add a new customer in the "New Customer" tab.</div>';
                             return;
                         }
 
-                        customerSearchResults.innerHTML = data.customers.map(customer => `
-                            <div class="customer-result p-2 border-bottom" style="cursor:pointer" onclick="selectCustomer(${customer.id}, '${customer.name}', '${customer.phone || ''}')">
-                                <div class="fw-semibold">${customer.name}</div>
-                                <small class="text-muted">${customer.phone || ''} ${customer.email ? '• ' + customer.email : ''}</small>
-                            </div>
-                        `).join('');
+                        customerSearchResults.innerHTML = data.customers.map(customer => {
+                            const safeName = (customer.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            const safePhone = (customer.phone || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            const displayPhone = customer.phone || '';
+                            const displayEmail = customer.email ? '• ' + customer.email : '';
+                            return `
+                                <div class="customer-result p-2 border-bottom" style="cursor:pointer" onclick="selectCustomer(${customer.id}, '${safeName}', '${safePhone}')">
+                                    <div class="fw-semibold">${customer.name}</div>
+                                    <small class="text-muted">${displayPhone} ${displayEmail}</small>
+                                </div>
+                            `;
+                        }).join('');
                     })
                     .catch(error => {
-                        customerSearchResults.innerHTML = '<div class="text-danger text-center py-3">Error searching customers</div>';
+                        console.error('Customer search error:', error);
+                        customerSearchResults.innerHTML = '<div class="text-danger text-center py-3">Error searching customers. Please try again.</div>';
                     });
             }, 300);
         });
@@ -1274,10 +1601,15 @@
                         },
                         body: formData
                     })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok && response.status !== 422) {
+                        throw new Error('Server error: ' + response.status);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
-                        selectCustomer(data.customer.id, data.customer.name, data.customer.phone);
+                        selectCustomer(data.customer.id, data.customer.name, data.customer.phone || '');
                         this.reset();
                         // Close the modal after successful creation
                         const modal = bootstrap.Modal.getInstance(document.getElementById('customerModal'));

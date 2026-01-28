@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('install')->withoutMiddleware(\App\Http\Middleware\CheckInstallation::class)->group(function () {
     Route::get('/', [InstallerController::class, 'index'])->name('installer.index');
     Route::get('/requirements', [InstallerController::class, 'requirements'])->name('installer.requirements');
+    Route::get('/license', [InstallerController::class, 'license'])->name('installer.license');
+    Route::post('/license', [InstallerController::class, 'licenseStore'])->name('installer.license.store');
     Route::get('/database', [InstallerController::class, 'database'])->name('installer.database');
     Route::post('/database', [InstallerController::class, 'databaseStore'])->name('installer.database.store');
     Route::get('/migrations', [InstallerController::class, 'migrations'])->name('installer.migrations');

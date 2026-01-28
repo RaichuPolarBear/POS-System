@@ -8,6 +8,7 @@ use App\Observers\OrderObserver;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +35,28 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production (when behind proxy or load balancer)
+        if (config('app.env') === 'production' || request()->server('HTTP_X_FORWARDED_PROTO') === 'https') {
+            URL::forceScheme('https');
+        }
+        
+        // Auto-detect APP_URL from request if not properly set
+        if (request()->getHost() && request()->getHost() !== 'localhost') {
+            $scheme = request()->secure() ? 'https' : 'http';
+            $host = request()->getHost();
+            $port = request()->getPort();
+            
+            // Build the URL (exclude default ports)
+            $url = $scheme . '://' . $host;
+            if ($port && !in_array($port, [80, 443])) {
+                $url .= ':' . $port;
+            }
+            
+            // Set the root URL for assets and routes
+            URL::forceRootUrl($url);
+            config(['app.url' => $url]);
+        }
+
         // Register Order observer
         Order::observe(OrderObserver::class);
 

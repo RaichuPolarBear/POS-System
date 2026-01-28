@@ -497,24 +497,34 @@ class POSController extends Controller
      */
     public function searchCustomers(Request $request)
     {
-        $store = auth()->user()->getEffectiveStore();
-        $search = $request->input('q', '');
+        try {
+            $store = auth()->user()->getEffectiveStore();
+            
+            if (!$store) {
+                return response()->json(['customers' => [], 'error' => 'No store found']);
+            }
+            
+            $search = $request->input('q', '');
 
-        if (strlen($search) < 2) {
-            return response()->json(['customers' => []]);
+            if (strlen($search) < 2) {
+                return response()->json(['customers' => []]);
+            }
+
+            $customers = $store->customers()
+                ->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('phone', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                })
+                ->select('id', 'name', 'phone', 'email')
+                ->limit(10)
+                ->get();
+
+            return response()->json(['customers' => $customers]);
+        } catch (\Exception $e) {
+            \Log::error('Customer search error: ' . $e->getMessage());
+            return response()->json(['customers' => [], 'error' => $e->getMessage()]);
         }
-
-        $customers = $store->customers()
-            ->where(function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            })
-            ->select('id', 'name', 'phone', 'email')
-            ->limit(10)
-            ->get();
-
-        return response()->json(['customers' => $customers]);
     }
 
     /**
@@ -522,35 +532,57 @@ class POSController extends Controller
      */
     public function createCustomer(Request $request)
     {
-        $store = auth()->user()->getEffectiveStore();
+        try {
+            $store = auth()->user()->getEffectiveStore();
+            
+            if (!$store) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No store found',
+                ], 400);
+            }
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
-        ]);
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'phone' => 'nullable|string|max:20',
+                'email' => 'nullable|email|max:255',
+            ]);
 
-        // Check if customer with same phone already exists
-        $existing = $store->customers()->where('phone', $validated['phone'])->first();
-        if ($existing) {
+            // Check if customer with same phone already exists (only if phone provided)
+            if (!empty($validated['phone'])) {
+                $existing = $store->customers()->where('phone', $validated['phone'])->first();
+                if ($existing) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Customer already exists with this phone number.',
+                        'customer' => $existing,
+                    ]);
+                }
+            }
+
+            $customer = $store->customers()->create([
+                'name' => $validated['name'],
+                'phone' => $validated['phone'] ?? null,
+                'email' => $validated['email'] ?? null,
+                'is_manually_added' => true,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer created successfully.',
+                'customer' => $customer,
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Customer with this phone number already exists.',
-                'customer' => $existing,
+                'message' => 'Validation error: ' . implode(', ', $e->validator->errors()->all()),
             ], 422);
+        } catch (\Exception $e) {
+            \Log::error('Customer create error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating customer: ' . $e->getMessage(),
+            ], 500);
         }
-
-        $customer = $store->customers()->create([
-            'name' => $validated['name'],
-            'phone' => $validated['phone'],
-            'email' => $validated['email'] ?? null,
-            'is_manually_added' => true,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Customer created successfully.',
-            'customer' => $customer,
-        ]);
     }
 }

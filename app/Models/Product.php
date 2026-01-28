@@ -44,6 +44,23 @@ class Product extends Model
         'is_featured' => 'boolean',
     ];
 
+    /**
+     * Accessor for sale_price - maps to compare_price
+     * The compare_price field stores the sale/discounted price
+     */
+    public function getSalePriceAttribute()
+    {
+        return $this->compare_price;
+    }
+
+    /**
+     * Mutator for sale_price - stores in compare_price
+     */
+    public function setSalePriceAttribute($value)
+    {
+        $this->attributes['compare_price'] = $value;
+    }
+
     protected static function boot()
     {
         parent::boot();

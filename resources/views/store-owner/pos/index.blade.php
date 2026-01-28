@@ -1201,46 +1201,7 @@
     // Initialize
     updateCartDisplay();
 
-    // Customer Search Functionality
-    let customerSearchTimeout;
-    const customerSearchInput = document.getElementById('customerSearchInput');
-    const customerSearchResults = document.getElementById('customerSearchResults');
-
-    if (customerSearchInput) {
-        customerSearchInput.addEventListener('input', function() {
-            clearTimeout(customerSearchTimeout);
-            const query = this.value.trim();
-
-            if (query.length < 2) {
-                customerSearchResults.innerHTML = '<div class="text-muted text-center py-3">Type at least 2 characters to search</div>';
-                return;
-            }
-
-            customerSearchResults.innerHTML = '<div class="text-center py-3"><span class="spinner-border spinner-border-sm"></span> Searching...</div>';
-
-            customerSearchTimeout = setTimeout(() => {
-                fetch(`{{ route('store-owner.pos.customers.search') }}?q=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.customers.length === 0) {
-                            customerSearchResults.innerHTML = '<div class="text-muted text-center py-3">No customers found</div>';
-                            return;
-                        }
-
-                        customerSearchResults.innerHTML = data.customers.map(customer => `
-                            <div class="customer-result p-2 border-bottom" style="cursor:pointer" onclick="selectCustomer(${customer.id}, '${customer.name}', '${customer.phone || ''}')">
-                                <div class="fw-semibold">${customer.name}</div>
-                                <small class="text-muted">${customer.phone || ''} ${customer.email ? '• ' + customer.email : ''}</small>
-                            </div>
-                        `).join('');
-                    })
-                    .catch(error => {
-                        customerSearchResults.innerHTML = '<div class="text-danger text-center py-3">Error searching customers</div>';
-                    });
-            }, 300);
-        });
-    }
-
+    // Customer Search and Form will be initialized after modal is ready
     function selectCustomer(id, name, phone) {
         document.getElementById('selectedCustomerId').value = id;
         document.getElementById('selectedCustomerDisplay').innerHTML = `
@@ -1253,48 +1214,6 @@
     function clearSelectedCustomer() {
         document.getElementById('selectedCustomerId').value = '';
         document.getElementById('selectedCustomerDisplay').innerHTML = '<span class="text-muted">Walk-in Customer</span>';
-    }
-
-    // New Customer Form
-    const newCustomerForm = document.getElementById('newCustomerForm');
-    if (newCustomerForm) {
-        newCustomerForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Creating...';
-
-            fetch('{{ route('store-owner.pos.customers.create') }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Accept': 'application/json'
-                        },
-                        body: formData
-                    })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        selectCustomer(data.customer.id, data.customer.name, data.customer.phone);
-                        this.reset();
-                        // Close the modal after successful creation
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('customerModal'));
-                        if (modal) modal.hide();
-                        alert('Customer added successfully!');
-                    } else {
-                        alert('Error: ' + (data.message || 'Failed to create customer'));
-                    }
-                })
-                .catch(error => {
-                    alert('Error creating customer');
-                })
-                .finally(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="bi bi-person-plus me-1"></i> Add Customer';
-                });
-        });
     }
 </script>
 
@@ -1355,6 +1274,102 @@
         </div>
     </div>
 </div>
+
+<!-- Customer Search and Form Script - Must be after modal HTML -->
+<script>
+(function() {
+    // Customer Search Functionality
+    let customerSearchTimeout;
+    const customerSearchInput = document.getElementById('customerSearchInput');
+    const customerSearchResults = document.getElementById('customerSearchResults');
+
+    if (customerSearchInput) {
+        customerSearchInput.addEventListener('input', function() {
+            clearTimeout(customerSearchTimeout);
+            const query = this.value.trim();
+
+            if (query.length < 2) {
+                customerSearchResults.innerHTML = '<div class="text-muted text-center py-3">Type at least 2 characters to search</div>';
+                return;
+            }
+
+            customerSearchResults.innerHTML = '<div class="text-center py-3"><span class="spinner-border spinner-border-sm"></span> Searching...</div>';
+
+            customerSearchTimeout = setTimeout(() => {
+                fetch(`{{ route('store-owner.pos.customers.search') }}?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.customers.length === 0) {
+                            customerSearchResults.innerHTML = '<div class="text-muted text-center py-3">No customers found</div>';
+                            return;
+                        }
+
+                        customerSearchResults.innerHTML = data.customers.map(customer => `
+                            <div class="customer-result p-2 border-bottom" style="cursor:pointer" onclick="selectCustomer(${customer.id}, '${escapeHtml(customer.name)}', '${escapeHtml(customer.phone || '')}')">
+                                <div class="fw-semibold">${escapeHtml(customer.name)}</div>
+                                <small class="text-muted">${escapeHtml(customer.phone || '')} ${customer.email ? '• ' + escapeHtml(customer.email) : ''}</small>
+                            </div>
+                        `).join('');
+                    })
+                    .catch(error => {
+                        console.error('Customer search error:', error);
+                        customerSearchResults.innerHTML = '<div class="text-danger text-center py-3">Error searching customers</div>';
+                    });
+            }, 300);
+        });
+    }
+
+    // Helper function to escape HTML
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // New Customer Form
+    const newCustomerForm = document.getElementById('newCustomerForm');
+    if (newCustomerForm) {
+        newCustomerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Creating...';
+
+            fetch('{{ route('store-owner.pos.customers.create') }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    selectCustomer(data.customer.id, data.customer.name, data.customer.phone);
+                    this.reset();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('customerModal'));
+                    if (modal) modal.hide();
+                    alert('Customer added successfully!');
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to create customer'));
+                }
+            })
+            .catch(error => {
+                console.error('Customer create error:', error);
+                alert('Error creating customer');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="bi bi-person-plus me-1"></i> Add Customer';
+            });
+        });
+    }
+})();
+</script>
 
 <!-- Cash Register Modal (shown when no session is open) -->
 @if(!isset($cashRegisterSession))

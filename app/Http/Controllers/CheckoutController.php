@@ -184,7 +184,8 @@ class CheckoutController extends Controller
 
             // Add transaction to cash register if session is open
             $cashSession = CashRegisterSession::getAnyOpenSession($store->id);
-            if ($cashSession && $validated['payment_method'] !== 'online') {
+            $onlinePaymentMethods = ['razorpay', 'stripe', 'paypal'];
+            if ($cashSession && !in_array($validated['payment_method'], $onlinePaymentMethods)) {
                 // Only add to cash register for non-online payments
                 $cashSession->addTransaction('sale', $validated['payment_method'], $total, $order->id);
             }
@@ -195,8 +196,8 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // If online payment, redirect to payment gateway
-            if ($validated['payment_method'] === 'online') {
+            // If online payment (Razorpay, Stripe, PayPal), redirect to payment gateway
+            if (in_array($validated['payment_method'], $onlinePaymentMethods)) {
                 return $this->paymentService->initiatePayment($order);
             }
 

@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('install')->withoutMiddleware(\App\Http\Middleware\CheckInstallation::class)->group(function () {
     Route::get('/', [InstallerController::class, 'index'])->name('installer.index');
     Route::get('/requirements', [InstallerController::class, 'requirements'])->name('installer.requirements');
+    Route::get('/license', [InstallerController::class, 'license'])->name('installer.license');
+    Route::post('/license', [InstallerController::class, 'licenseStore'])->name('installer.license.store');
     Route::get('/database', [InstallerController::class, 'database'])->name('installer.database');
     Route::post('/database', [InstallerController::class, 'databaseStore'])->name('installer.database.store');
     Route::get('/migrations', [InstallerController::class, 'migrations'])->name('installer.migrations');
@@ -106,6 +108,18 @@ Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
 Route::get('/order/{order}/confirmation', [CheckoutController::class, 'confirmation'])->name('order.confirmation');
+
+/*
+|--------------------------------------------------------------------------
+| Payment Routes (Order Payments)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/payment/razorpay/{orderNumber}', [App\Http\Controllers\PaymentController::class, 'razorpay'])->name('payment.razorpay');
+Route::post('/payment/razorpay/callback', [App\Http\Controllers\PaymentController::class, 'razorpayCallback'])->name('payment.razorpay.callback');
+Route::get('/payment/razorpay/failed', [App\Http\Controllers\PaymentController::class, 'razorpayFailed'])->name('payment.razorpay.failed');
+Route::get('/payment/stripe/{orderNumber}', [App\Http\Controllers\PaymentController::class, 'stripe'])->name('payment.stripe');
+Route::post('/payment/stripe/callback', [App\Http\Controllers\PaymentController::class, 'stripeCallback'])->name('payment.stripe.callback');
 
 Route::middleware('auth')->group(function () {
     // Customer orders

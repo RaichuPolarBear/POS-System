@@ -99,6 +99,18 @@ class InstallerController extends Controller
         ]);
 
         try {
+            // DEVELOPMENT BYPASS: Allow test purchase codes in non-production
+            $testCodes = ['TEST-LICENSE-2026', 'DEV-LICENSE-KEY', 'STYX-DEV-2026'];
+            if (config('app.env') !== 'production' && in_array(strtoupper($request->purchase_code), $testCodes)) {
+                // Store the test purchase code
+                $this->updateEnv([
+                    'PURCHASE_CODE' => $request->purchase_code,
+                ]);
+                File::put(storage_path('license_key'), $request->purchase_code);
+                
+                return redirect()->route('installer.database');
+            }
+
             // Call the license verification API
             $response = Http::timeout(30)->asForm()->post(self::LICENSE_API_URL, [
                 'purchase_code' => $request->purchase_code,

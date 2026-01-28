@@ -292,14 +292,6 @@
             width: 50px !important;
             height: 50px !important;
         }
-        .store-header .row {
-            flex-direction: column;
-            align-items: center !important;
-            text-align: center;
-        }
-        .store-header .col-auto:last-child {
-            margin-top: 0.5rem;
-        }
         .product-card img, .product-image-wrapper > div {
             height: 140px !important;
         }
@@ -307,79 +299,13 @@
             padding: 10px !important;
         }
         .card-title {
-            font-size: 0.85rem;
-        }
-        .product-price {
             font-size: 0.9rem;
         }
-        /* Show categories as horizontal scrolling on mobile */
-        .col-lg-3 .card {
-            margin-bottom: 1rem;
-        }
-        .col-lg-3 .list-group {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .col-lg-3 .list-group-item {
-            flex-shrink: 0;
-            white-space: nowrap;
-            border-radius: 20px !important;
-            margin-right: 0.5rem;
-            padding: 0.4rem 0.75rem;
-            font-size: 0.85rem;
-        }
-        .col-lg-3 .card-header {
-            display: none;
-        }
-        /* Search and sort mobile */
-        .col-md-8, .col-md-4 {
-            margin-bottom: 0.5rem;
-        }
-        /* Products grid */
-        .row.g-4 {
-            --bs-gutter-x: 0.75rem;
-            --bs-gutter-y: 0.75rem;
-        }
-        /* Add to cart button */
-        .btn-store-primary {
-            font-size: 0.8rem;
-            padding: 0.35rem 0.6rem;
-        }
-    }
-    
-    @media (max-width: 575px) {
-        .store-header h1 {
-            font-size: 1.1rem;
-        }
-        .store-header .badge {
-            font-size: 0.7rem;
-        }
-        .store-header p {
-            font-size: 0.85rem;
-        }
-        .product-card img, .product-image-wrapper > div {
-            height: 110px !important;
-        }
-        .card-title {
-            font-size: 0.75rem;
-            margin-bottom: 0.25rem !important;
-        }
-        .card-text {
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem !important;
-        }
         .product-price {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
         }
-        .btn-store-primary {
-            font-size: 0.75rem;
-            padding: 0.3rem 0.5rem;
-        }
-        .hover-overlay {
-            display: none !important;
+        .col-lg-3 {
+            display: none;
         }
     }
 </style>

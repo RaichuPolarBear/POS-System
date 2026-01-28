@@ -35,6 +35,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // CRITICAL: Use file sessions during installation to avoid database dependency
+        // This must run BEFORE any session access
+        if (!$this->isInstalled() || str_starts_with(request()->path(), 'install')) {
+            config(['session.driver' => 'file']);
+        }
+
         // Force HTTPS in production (when behind proxy or load balancer)
         if (config('app.env') === 'production' || request()->server('HTTP_X_FORWARDED_PROTO') === 'https') {
             URL::forceScheme('https');

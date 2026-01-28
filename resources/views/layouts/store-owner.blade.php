@@ -207,83 +207,6 @@
             .main-content {
                 margin-left: 0;
             }
-            
-            /* Top navbar mobile */
-            .top-navbar {
-                padding: 0.75rem 1rem;
-            }
-            .top-navbar h5 {
-                font-size: 1rem;
-            }
-            .top-navbar .btn-sm {
-                padding: 0.25rem 0.5rem;
-                font-size: 0.75rem;
-            }
-            .top-navbar .btn-sm .me-1 {
-                margin-right: 0 !important;
-            }
-            .top-navbar .btn-sm span,
-            .top-navbar .btn-primary span,
-            .top-navbar .btn-outline-primary span {
-                display: none;
-            }
-            
-            /* Content wrapper mobile */
-            .content-wrapper {
-                padding: 1rem;
-            }
-            
-            /* User dropdown mobile */
-            .user-dropdown {
-                padding: 0.25rem 0.5rem;
-            }
-            .user-dropdown > div:first-child {
-                display: none !important;
-            }
-        }
-        
-        /* Very small screens */
-        @media (max-width: 480px) {
-            .top-navbar {
-                padding: 0.5rem 0.75rem;
-            }
-            .top-navbar h5 {
-                font-size: 0.9rem;
-                max-width: 150px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .top-navbar .gap-3 {
-                gap: 0.5rem !important;
-            }
-            .content-wrapper {
-                padding: 0.75rem;
-            }
-        }
-        
-        /* Sidebar backdrop */
-        .sidebar-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .sidebar-backdrop.show {
-            display: block;
-            opacity: 1;
-        }
-        @media (max-width: 768px) {
-            .sidebar.show ~ .sidebar-backdrop {
-                display: block;
-                opacity: 1;
-            }
         }
 
         .sidebar::-webkit-scrollbar {
@@ -397,15 +320,12 @@
         </nav>
     </aside>
 
-    <!-- Sidebar Backdrop for Mobile -->
-    <div class="sidebar-backdrop" onclick="document.querySelector('.sidebar').classList.remove('show'); this.classList.remove('show');"></div>
-
     <!-- Main Content -->
     <div class="main-content">
         <!-- Top Navbar -->
         <header class="top-navbar d-flex justify-content-between align-items-center">
             <div class="d-flex align-items-center">
-                <button class="btn btn-link text-dark d-md-none me-2" type="button" onclick="toggleSidebar()">
+                <button class="btn btn-link text-dark d-md-none me-2" type="button" onclick="document.querySelector('.sidebar').classList.toggle('show')">
                     <i class="bi bi-list fs-4"></i>
                 </button>
                 <h5 class="mb-0 fw-semibold">@yield('page-title', 'Dashboard')</h5>
@@ -477,14 +397,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Sidebar toggle function for mobile
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const backdrop = document.querySelector('.sidebar-backdrop');
-            sidebar.classList.toggle('show');
-            backdrop.classList.toggle('show');
-        }
-        
         // Global image error handler
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('img').forEach(function(img) {
